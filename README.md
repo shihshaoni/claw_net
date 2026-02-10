@@ -1,3 +1,9 @@
+1. ClawNet 是一個 multi-agent interaction kernel，不是 agent 框架。
+2. 它把 agent 之間的互動轉換成 可觀測、可重播、可歸責的工程事件。
+3. 當多 agent 系統失敗時，ClawNet 能精準指出 哪個 agent、在哪個互動、違反了什麼不變量。
+4. 這讓 multi-agent 系統第一次能被 debug、replay、寫 postmortem、做 regression test。
+5. ClawNet 的目標不是讓 agent 變聰明，而是讓 agent 互動變得可控、可負責、可演進。
+
 # ClawNet (Engineering Skeleton)
 
 This repository is a **Phase 1-first** engineering skeleton for ClawNet: an agent-to-agent communication kernel that makes interaction **observable**, **replayable**, and **attributable**.
