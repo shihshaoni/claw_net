@@ -1,5 +1,7 @@
 # ClawNet — Agent-to-Agent Communication Kernel
 
+> Last updated: 2026-02-28 21:49 (UTC+8)
+
 **跨工程（Phase 1）／研究（Phase 2）／社交生態（Phase 3）的多 Agent 溝通平台完整設計文件**
 
 ---
@@ -379,6 +381,20 @@ Environment 介面：
 
 ## 9. 實作優先順序
 
-1. Phase 1 Kernel
-2. Phase 2 Metrics / Experiments
-3. Phase 3 Reputation / Negotiation / Emergence
+執行順序：**4 → 1 → 3 → 2**
+
+| 順序 | Phase | 名稱 | 狀態 |
+|------|-------|------|------|
+| 1st | Phase 4 | Market Validation | `NOT STARTED` |
+| 2nd | Phase 1 | Interaction Trace MVP | `IN PROGRESS` — Engineering Skeleton Complete |
+| 3rd | Phase 3 | Formal Specification / Whitepaper | `NOT STARTED` |
+| 4th | Phase 2 | Fundraising Narrative | `NOT STARTED` |
+
+**為什麼這個順序？**
+
+1. **Phase 4 先行** — 在寫更多基礎建設之前，先驗證痛點是否真實存在
+2. **Phase 1 其次** — 建造能解決已驗證痛點的最小可用產品
+3. **Phase 3 第三** — 將學到的東西形式化為規範，賦予學術與工程公信力
+4. **Phase 2 最後** — 手握驗證 + 產品 + 規範，用證據而非承諾來募資
+
+> 詳細路線圖請參閱 [README.md](../README.md)

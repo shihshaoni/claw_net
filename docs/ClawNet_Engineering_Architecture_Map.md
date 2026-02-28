@@ -1,5 +1,8 @@
 # ClawNet Engineering Map (Phase 1 v0)
-> **一份「最直覺」的架構圖 + 開發流程 + function 導覽 + protocol 定義 + 測試細節**  
+
+> Last updated: 2026-02-28 21:49 (UTC+8)
+
+> **一份「最直覺」的架構圖 + 開發流程 + function 導覽 + protocol 定義 + 測試細節**
 > 對應 repo：`clawnet_skeleton.zip`（Go）
 
 ---
@@ -318,5 +321,36 @@ ClawNet 把 multi-agent 的互動定義成 **intent-based protocol**，並把每
 - FSM：`internal/task/transition.go::Apply()`
 - Event store：`internal/eventstore/store.go::Append(), List()`
 - Attribution：`internal/attribution/failure.go::FailureReport`
+
+---
+
+## 13. 目前進度與下一步
+
+### 已完成（~459 行 Go）
+
+| 元件 | 狀態 | 說明 |
+|------|------|------|
+| `protocol/intent.go` | Done | 7 IntentTypes |
+| `protocol/message.go` | Done | Message schema with refs |
+| `eventstore/event.go` | Done | Event struct & 5 EventTypes |
+| `eventstore/store.go` | Done | InMemoryStore (thread-safe) |
+| `task/state.go` | Done | 6 states FSM |
+| `task/transition.go` | Done | FSM validation + Apply() |
+| `constraints/constraints.go` | Done | ConstraintSet defaults |
+| `kernel/kernel.go` | Partial | 僅處理 DECISION intent |
+| `attribution/failure.go` | Partial | 僅實現 INSUFFICIENT_EVIDENCE |
+| `examples/simple_task` | Done | 3-agent 失敗場景 demo |
+
+### v0 → v1 升級路線
+
+1. **完善 Kernel** — 處理所有 intent types，啟用 BUDGET_UPDATED
+2. **Tracer SDK** — 實現 StartTrace / StartSpan / Exporter
+3. **Collector API** — POST /ingest + GET /traces/{trace_id}
+4. **Postgres** — 替換 InMemoryStore
+5. **Pattern Detection** — loop / fan-out / cost attribution
+6. **Replay** — strict + soft 模式
+7. **測試** — unit + integration + failure scenario tests
+
+> 完整路線圖請參閱 [README.md](../README.md)
 
 ---

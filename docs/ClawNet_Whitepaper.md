@@ -1,6 +1,8 @@
 # ClawNet: A Communication Kernel for Accountable Multi-Agent Systems
 **Making Agent Interaction Observable, Reproducible, and Attributable**
 
+> Last updated: 2026-02-28 21:49 (UTC+8)
+
 ---
 
 ## Abstract
@@ -261,3 +263,5 @@ ClawNet provides a foundation for building multi-agent systems that can be:
 ---
 
 *This document describes an ongoing research and engineering effort.*
+
+> **Current status:** Phase 1 Engineering Skeleton complete (~459 lines Go). Execution roadmap: 4 → 1 → 3 → 2. See [README.md](../README.md) for full roadmap.

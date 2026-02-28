@@ -66,6 +66,93 @@ You should see:
 - an intentional failure (`INSUFFICIENT_EVIDENCE`)
 - a generated **FailureReport** with a responsibility chain
 
+### Example Output
+
+```
+ClawNet - Phase 1 Engineering Skeleton
+Running examples/simple_task ...
+-----
+Run finished in: 109.292us
+
+FailureReport:
+  RunID          = 4c2add4c5332f0a6...
+  TaskID         = simple_task_v0
+  Reason         = INSUFFICIENT_EVIDENCE
+  FailingAgent   = worker
+  FailingIntent  = CLAIM
+  MessageID      = de620323edd9b6e1...
+  UpstreamChain  = de620323... -> e23e2bba...
+  Explanation    = Verifier challenged the latest CLAIM due to
+                   missing or weak EVIDENCE references (v0 heuristic).
+```
+
+This tells you: **Worker** made a **CLAIM** without providing evidence refs. **Verifier** challenged it. ClawNet traced the responsibility chain back to the exact message where the failure originated.
+
+---
+
+## Core Concepts
+
+### Intent-Based Messaging
+
+ClawNet replaces free-form chat with **typed intents**. Every agent interaction must declare its semantic purpose:
+
+```go
+// internal/protocol/intent.go
+type IntentType string
+
+const (
+    IntentRequest   IntentType = "REQUEST"    // Ask another agent to do something
+    IntentResponse  IntentType = "RESPONSE"   // Answer a request
+    IntentClaim     IntentType = "CLAIM"      // Assert a result (requires evidence)
+    IntentEvidence  IntentType = "EVIDENCE"   // Provide supporting data for a claim
+    IntentChallenge IntentType = "CHALLENGE"  // Dispute a claim
+    IntentStatus    IntentType = "STATUS"     // Report progress
+    IntentDecision  IntentType = "DECISION"   // Advance the task state machine
+)
+```
+
+Each message carries structured metadata for tracing and attribution:
+
+```go
+// internal/protocol/message.go
+type Message struct {
+    MessageID string        // Unique ID for this interaction
+    RunID     string        // Groups messages into a single run
+    TaskID    string        // The task being worked on
+
+    FromAgent string        // Who sent this
+    ToAgents  []string      // Who receives this
+
+    Intent     IntentType   // Semantic purpose (not free text)
+    Payload    any          // Content (variable, doesn't affect system layer)
+    Confidence float64      // Agent's self-assessed confidence
+    Refs       []string     // Responsibility chain — links to prior messages
+
+    IdempotencyKey string
+    Timestamp      time.Time
+}
+```
+
+The moat is `Intent + Refs`, not `Payload`. Intents make interactions computable; Refs make failures traceable.
+
+### How ClawNet Differs from OpenTelemetry
+
+Readers familiar with distributed tracing may ask: *"Why not just use OpenTelemetry?"*
+
+| | OpenTelemetry | ClawNet |
+|--|---------------|---------|
+| **Design for** | Passive observation of existing systems | Active enforcement of interaction structure |
+| **Data model** | Generic spans and events | Typed intents with semantic meaning |
+| **Agent awareness** | None — treats agents as black boxes | First-class — agents have roles, constraints, responsibility |
+| **Failure analysis** | "Span X took 5s" | "Agent Y made CLAIM Z without evidence, violating invariant" |
+| **Replay** | Not supported | Event-sourced strict/soft replay |
+| **Attribution** | Latency & error rates | Causal responsibility chains |
+
+OpenTelemetry answers: *"What happened and how long did it take?"*
+ClawNet answers: *"Which agent, at which interaction, violated which invariant, and why?"*
+
+ClawNet can export to OTel-compatible backends for visualization, but its core value is the **typed interaction protocol** and **causal attribution** that OTel was never designed to provide.
+
 ---
 
 ## Repo Layout
